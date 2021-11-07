@@ -1,21 +1,28 @@
-const projectsUrl = "https://api.github.com/users/vrfdivino/repos";
-const userUrl = "https://api.github.com/users/vrfdivino";
+const USERNAME                  = "vrfdivino";
+const GITHUB_USER_RESOURCE      = `https://api.github.com/users/${USERNAME}`;
+const GITHUB_USER_REPO_RESOURCE = `https://api.github.com/users/${USERNAME}/repos`;
 
-fetch(userUrl, { headers: {} })
-    .then(response => response.json())
-    .then(data => {
-        const profile = document.getElementById("profile");
-        profile.innerHTML = `<img src="${data.avatar_url}" alt="${data.name}" />`;
-    });
+const userProfileDOM = document.querySelector("#profile");
+const userProjectsDOM = document.querySelector("#projects");
 
+const getUserProfile = async dom => {
+    const data = await fetch(GITHUB_USER_RESOURCE).then(res => res.json());
+    const img = document.createElement("img");
+    img.src = data.avatar_url;
+    dom.appendChild(img);
+    return;
+};
 
-
-fetch(projectsUrl, { headers: {} })
-    .then(response => response.json())
-    .then(data => {
-        data.forEach(element => {
+const getUserProjects = async dom => {
+    const data = await fetch(GITHUB_USER_REPO_RESOURCE).then(res => res.json());
+    data.forEach(project => {
+        if (project.name && project.html_url && project.description) {
             const li = document.createElement("li");
-            li.innerHTML = `<a href="${element.html_url}">${element.name}</a> - <em>${element.description}</em>`;
-            document.getElementById("projects").appendChild(li);
-        });
+            li.innerHTML = `<a href="${project.html_url}">${project.name}</a> - ${project.description}`;
+            dom.appendChild(li);
+        }
     });
+};
+
+getUserProfile(userProfileDOM);
+getUserProjects(userProjectsDOM);
