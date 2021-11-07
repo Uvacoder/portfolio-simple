@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Von Divino</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                display: flex;
+                height: 100vh;
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+                font-family: sans-serif;
+                text-align: center;
+            }
+
+            .container {
+                width: 50%;
+            }
+
+            .box {
+                padding: 2rem 0;
+            }
+
+            li {
+                list-style: none;
+            }
+
+            img {
+                height: 150px;
+                border-radius: 50%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="box" id="profile">
+            </div>
+            <div class="box">
+
+                <h1>Hey, I'm Von!</h1>
+                <p>I am a software engineer based in the Philippines. I'm currently studying at UP - Los Baños taking up BS Computer Science as my major. 
+                    I have experienced in running a startup for two years now -- starting as a lead developer and became an EdTech founder with Buoyr Technologies.
+                    My interests in this field include systems programming, web development, and human-computer interaction.
+                </p>
+            </div>
+
+            <div class="box">
+
+                <h2>My Projects</h2>
+                <ul id="projects">
+                    
+                </ul>
+            </div>
+        </div>
+        <script>
+            const projectsUrl = "https://api.github.com/users/vrfdivino/repos";
+            const userUrl = "https://api.github.com/users/vrfdivino";
+
+            fetch(userUrl, { headers: {} })
+                .then(response => response.json())
+                .then(data => {
+                    const profile = document.getElementById("profile");
+                    profile.innerHTML = `<img src="${data.avatar_url}" alt="${data.name}" />`;
+                });
+
+
+
+            fetch(projectsUrl, { headers: {} })
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(element => {
+                        const li = document.createElement("li");
+                        li.innerHTML = `<a href="${element.html_url}">${element.name}</a> - <em>${element.description}</em>`;
+                        document.getElementById("projects").appendChild(li);
+                    });
+                });
+        </script>
+    </body>
+</html>
